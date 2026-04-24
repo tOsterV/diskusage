@@ -1,23 +1,18 @@
+#для каждой вложенной папки в диске, прогресс бар по работе, в несколько файлов, убрать GetDiskFreeSpaceExW, расширение, время, вложенность указать для работы кода
+
+#ДОП1!!!: GUI подобный windirstat (4 balla)
+#ДОП2!!!: поддержка exclude patterns (ввод регулярки которая исключает что-то из подсчета, за вменяемое время)
+
+
+
+
 import os
 import sys
 import platform
-
-# вспомогательные классы
-class ScanResult:
-    def __init__(self):
-        self.size = 0
-        self.files = 0
-        self.skipped = 0
+from scanresult import ScanResult
+from diskstat import DiskStats
 
 
-class DiskStats:
-    def __init__(self, total, free):
-        self.total = total
-        self.free = free
-        self.used = total - free
-
-
-# логика
 
 class Formatter:
     @staticmethod
@@ -51,7 +46,7 @@ class SystemInfoProvider:
         import ctypes
         free_bytes = ctypes.c_ulonglong(0)
         total_bytes = ctypes.c_ulonglong(0)
-        total_free_bytes= ctypes.c_ulonglong(0)
+        total_free_bytes = ctypes.c_ulonglong(0)
 
         full_path = os.path.abspath(path)
 
@@ -62,6 +57,7 @@ class SystemInfoProvider:
             ctypes.pointer(total_free_bytes)
         )
         return DiskStats(total_bytes.value, total_free_bytes.value)
+
 
 class DirectoryAnalyzer:
     def analyze(self, path):
