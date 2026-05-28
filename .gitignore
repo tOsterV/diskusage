@@ -50,6 +50,10 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+.idea/
+.venv/
+__pycache__/
+*.pyc
 
 # Translations
 *.mo

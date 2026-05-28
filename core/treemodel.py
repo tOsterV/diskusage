@@ -51,13 +51,19 @@ class ScanTreeModel(QAbstractItemModel):
         return 2
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
-        if not index.isValid() or role != Qt.ItemDataRole.DisplayRole:
+        if not index.isValid():
             return None
         item = index.internalPointer()
-        if index.column() == 0:
-            return item.name
-        if index.column() == 1:
-            from utils.formatter import Formatter
-            return Formatter().format_size(item.size)
-
+        if role == Qt.ItemDataRole.DisplayRole:
+            if index.column() == 0:
+                return item.name
+            if index.column() == 1:
+                from utils.formatter import Formatter
+                return Formatter().format_size(item.size)
+        if role == Qt.ItemDataRole.UserRole:
+            if index.column() == 0:
+                return item.name
+            if index.column() == 1:
+                return item.size
+        
         return None
