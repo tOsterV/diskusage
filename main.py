@@ -9,7 +9,7 @@ from utils.formatter import Formatter
 from core.sysplat import SystemInfoProvider
 from core.diranalyze import DirectoryAnalyzer
 from core.filters import RegexFilter
-from gui import DiskUsageGUI
+from app import DiskUsageGUI
 from PyQt6.QtWidgets import QApplication
 
 def run_gui():
