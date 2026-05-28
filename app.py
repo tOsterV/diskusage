@@ -47,8 +47,8 @@ class DiskUsageGUI(QMainWindow):
         self.label_path = QLabel("Выберите папку для начала сканирования")
         self.input_exclude = QLineEdit()
         self.input_exclude.setPlaceholderText(r"Исключить файлы по regex (например: \.tmp$|node_modules)")
-        self.btn = QPushButton("Выбрать папку и начать")  #
-        self.progress_bar = QProgressBar()  #
+        self.btn = QPushButton("Выбрать папку и начать")
+        self.progress_bar = QProgressBar()
 
         level_layout = QHBoxLayout()
         level_layout.addWidget(QLabel("Макс. уровень вложенности в дереве:"))
@@ -59,7 +59,7 @@ class DiskUsageGUI(QMainWindow):
         level_layout.addWidget(self.level_spin)
 
         self.splitter = QSplitter(Qt.Orientation.Vertical)
-        self.tree = QTreeView()  #
+        self.tree = QTreeView()
         self.tree.setSortingEnabled(True)
 
         self.treemap = TreeMapWidget()
@@ -71,7 +71,7 @@ class DiskUsageGUI(QMainWindow):
         self.splitter.setStretchFactor(1, 1)
 
         self.stats_label = QLabel("Статистика диска: ожидание...")
-
+        self.stats_label.setWordWrap(True)
         left_layout.addWidget(self.label_path)
         left_layout.addWidget(QLabel("Фильтр исключений (Regex):"))
         left_layout.addWidget(self.input_exclude)
@@ -144,13 +144,21 @@ class DiskUsageGUI(QMainWindow):
         self.btn.setEnabled(True)
 
         sys_info = SystemInfoProvider()
-        formatter = Formatter()
         disk = sys_info.get_disk_stat(self.thread.path)
-        stats_text = (f"Всего: {formatter.format_size(disk.total)} | "  
-                      f"Занято: {formatter.format_size(disk.used)} | "  
-                      f"Свободно: {formatter.format_size(disk.free)}")
-        self.stats_label.setText(stats_text)
+        total_gb = round(disk.total / (1024 ** 3), 2)
+        used_gb = round(disk.used / (1024 ** 3), 2)
+        free_gb = round(disk.free / (1024 ** 3), 2)
 
+        disk_name = self.thread.path
+        stats_text = (
+            f"DISK USAGE REPORT:\n\n"
+            f"--Info about disk [{disk_name}] --\n"
+            f"Общий объем диска: {total_gb} GB\n"
+            f"Занято на диске: {used_gb} GB\n"
+            f"Свободно на диске: {free_gb} GB"
+        )
+
+        self.stats_label.setText(stats_text)
         self.model = ScanTreeModel(result)
         self.proxy_model = QSortFilterProxyModel()
         self.proxy_model.setSourceModel(self.model)

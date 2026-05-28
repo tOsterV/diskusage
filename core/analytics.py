@@ -11,13 +11,16 @@ class DataAggregator:
         return nodes
 
     @staticmethod
+    @staticmethod
     def group_by_extension(root_node):
         """Группировка: Расширение -> (Суммарный размер, Количество файлов)"""
         flat = DataAggregator.get_flat_nodes(root_node)
         ext_map = {}
         for n in flat:
-            if n.children:
+            if n.extension == "Папка":
+                continue
             ext = n.extension if n.extension else "без расширения"
+
             size, count = ext_map.get(ext, (0, 0))
             ext_map[ext] = (size + n.size, count + 1)
         return ext_map
